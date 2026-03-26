@@ -2,453 +2,354 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#1F3864">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cubico">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>Cubico Nómina</title>
+<title>Cubico Nomina</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --dark:#1F3864;--mid:#2E75B6;--lblue:#BDD7EE;--alt:#DEEAF1;
-  --white:#ffffff;--bg:#f5f7fa;--surface:#ffffff;
-  --red:#C00000;--lred:#FFCCCC;--green:#E2EFDA;--mgreen:#375623;
-  --orange:#ED7D31;--lorange:#FCE4D6;--yellow:#FFF2CC;
-  --text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;
-  --he:#EAF3DE;--he-t:#3B6D11;--noct:#EEEDFE;--noct-t:#534AB7;--dom:#FAECE7;--dom-t:#993C1D;
-}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
-.header{background:var(--dark);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.header-title{font-size:17px;font-weight:600}
-.header-sub{font-size:11px;opacity:0.7;margin-top:1px}
-.tab-bar{display:flex;background:var(--dark);border-top:1px solid rgba(255,255,255,0.1)}
-.tab{flex:1;padding:10px;text-align:center;font-size:12px;color:rgba(255,255,255,0.6);cursor:pointer;border-bottom:2px solid transparent}
-.tab.active{color:#fff;border-bottom-color:#4f8ef7}
-.content{padding:12px}
-.period-row{display:flex;gap:8px;margin-bottom:12px}
-.period-btn{flex:1;padding:9px;border:1px solid var(--border);border-radius:10px;background:var(--surface);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer}
-.period-btn.active{background:var(--mid);color:#fff;border-color:var(--mid)}
-.day-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.day-scroll::-webkit-scrollbar{display:none}
-.day-chip{flex-shrink:0;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);white-space:nowrap}
-.day-chip.active{background:var(--mid);color:#fff;border-color:var(--mid)}
-.day-chip.festivo{background:var(--yellow);color:#92400e;border-color:#fbbf24}
-.day-chip.festivo.active{background:#b45309;color:#fff}
-.day-chip.domingo{background:var(--lred);color:var(--red);border-color:#fca5a5}
-.day-chip.domingo.active{background:var(--red);color:#fff}
-.day-title{font-size:14px;font-weight:600;color:var(--dark);margin-bottom:8px;padding:0 2px}
-.alert-box{background:var(--yellow);border:1px solid #fbbf24;border-radius:10px;padding:10px 12px;font-size:12px;color:#92400e;margin-bottom:10px}
-.emp-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px}
-.emp-card.incap{background:var(--lorange)}
-.emp-card.encasa{background:var(--yellow)}
-.emp-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.emp-name{font-size:13px;font-weight:600;color:var(--dark)}
-.emp-role{font-size:11px;color:var(--muted);margin-top:1px}
-.nov-select{font-size:11px;padding:4px 8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);max-width:150px}
-.turnos-grid{display:grid;gap:6px}
-.turno-row{display:flex;align-items:center;gap:6px}
-.turno-lbl{font-size:11px;color:var(--muted);width:20px;flex-shrink:0}
-.turno-input{flex:1;padding:8px;border:1px solid var(--border);border-radius:8px;font-size:14px;text-align:center;background:var(--bg);color:var(--text);-webkit-appearance:none}
-.turno-input:focus{outline:none;border-color:var(--mid);background:#fff}
-.turno-sep{font-size:13px;color:var(--muted)}
-.emp-result{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.res-badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
-.res-ord{background:#e0f2fe;color:#0369a1}
-.res-hed{background:var(--he);color:var(--he-t)}
-.res-hen{background:var(--noct);color:var(--noct-t)}
-.res-dom{background:var(--dom);color:var(--dom-t)}
-.res-val{background:var(--dark);color:#fff}
-.btn-row{position:fixed;bottom:0;left:0;right:0;padding:10px 12px;background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;z-index:100}
-.btn-save{flex:1;padding:12px;background:var(--mid);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
-.btn-send{flex:1;padding:12px;background:var(--dark);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
-.acum-section{margin-bottom:16px}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}
-.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
-.stat-val{font-size:22px;font-weight:600;color:var(--dark)}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:2px}
-.emp-acum-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:6px}
-.emp-acum-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.emp-acum-name{font-size:13px;font-weight:600}
-.emp-acum-role{font-size:11px;color:var(--muted)}
-.emp-acum-val{font-size:13px;font-weight:600;color:var(--dark)}
-.emp-acum-badges{display:flex;flex-wrap:wrap;gap:4px}
-.section-hdr{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:8px;padding:2px 0}
-.saved-toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.3s}
-.saved-toast.show{opacity:1}
+:root{--dark:#1F3864;--mid:#2E75B6;--bg:#f5f7fa;--surface:#fff;--red:#C00000;--lred:#FFCCCC;--lorange:#FCE4D6;--yellow:#FFF2CC;--text:#1a1a2e;--muted:#6b7280;--border:#e5e7eb;--he:#EAF3DE;--he-t:#3B6D11;--noct:#EEEDFE;--noct-t:#534AB7;--dom:#FAECE7;--dom-t:#993C1D}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column}
+.hdr{background:var(--dark);color:#fff;padding:max(env(safe-area-inset-top),12px) 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hdr-title{font-size:17px;font-weight:600}
+.hdr-sub{font-size:11px;opacity:.7;margin-top:1px}
+.tabs{display:flex;background:var(--dark);border-top:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.tab{flex:1;padding:9px 4px;text-align:center;font-size:12px;color:rgba(255,255,255,.55);cursor:pointer;border-bottom:2px solid transparent}
+.tab.on{color:#fff;border-bottom-color:#4f8ef7}
+.area{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 12px 90px}
+.hscroll{display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:5px 12px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--muted);white-space:nowrap}
+.chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.chip.day.on{background:var(--mid);border-color:var(--mid)}
+.chip.fest{background:var(--yellow);color:#92400e;border-color:#fbbf24}
+.day-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:8px}
+.alert{background:var(--yellow);border:1px solid #fbbf24;border-radius:10px;padding:8px 10px;font-size:12px;color:#92400e;margin-bottom:8px}
+.ecard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:8px}
+.ecard.inc{background:var(--lorange)}
+.ecard.casa{background:var(--yellow)}
+.etop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:6px}
+.ename{font-size:13px;font-weight:600;color:var(--dark);line-height:1.2}
+.erole{font-size:10px;color:var(--muted);margin-top:2px}
+.nsel{font-size:11px;padding:4px 6px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);max-width:138px;flex-shrink:0}
+.tgrid{display:flex;flex-direction:column;gap:5px}
+.trow{display:flex;align-items:center;gap:4px;width:100%;padding:0 2px}
+.tlbl{font-size:11px;color:var(--muted);width:24px;flex-shrink:0;text-align:center}
+.tinp{width:0;flex:1;min-width:0;padding:9px 2px;border:1px solid var(--border);border-radius:8px;font-size:16px;text-align:center;background:var(--bg);color:var(--text);-webkit-appearance:none}
+.tinp:focus{outline:none;border-color:var(--mid);background:#fff}
+.tsep{font-size:12px;color:var(--muted);flex-shrink:0}
+.eres{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500}
+.b-ord{background:#e0f2fe;color:#0369a1}
+.b-hed{background:var(--he);color:var(--he-t)}
+.b-hen{background:var(--noct);color:var(--noct-t)}
+.b-dom{background:var(--dom);color:var(--dom-t)}
+.b-val{background:var(--dark);color:#fff}
+.b-nov{background:var(--yellow);color:#92400e}
+.btnrow{position:fixed;bottom:0;left:0;right:0;padding:8px 12px max(env(safe-area-inset-bottom),8px);background:var(--surface);border-top:1px solid var(--border);display:flex;gap:8px;z-index:100}
+.btn{flex:1;padding:12px;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-s{background:var(--mid)}
+.btn-c{background:var(--dark)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px}
+.sc-lbl{font-size:11px;color:var(--muted);margin-bottom:3px}
+.sc-val{font-size:20px;font-weight:600;color:var(--dark)}
+.sc-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.acard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
+.atop{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.aname{font-size:13px;font-weight:600}
+.arole{font-size:10px;color:var(--muted)}
+.aval{font-size:13px;font-weight:600;color:var(--dark);flex-shrink:0;margin-left:8px}
+.abadges{display:flex;flex-wrap:wrap;gap:4px}
+.shdr{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:8px}
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.on{opacity:1}
+@media(max-width:375px){.tinp{font-size:14px;padding:8px 1px}.tlbl{width:20px}.nsel{max-width:120px}.ename{font-size:12px}}
+@media(orientation:landscape){.area{padding-bottom:60px}.btnrow{padding:6px 12px}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div>
-    <div class="header-title">Cubico Nómina</div>
-    <div class="header-sub">Cubiertas de Colombia</div>
-  </div>
-  <div style="font-size:11px;opacity:0.7;text-align:right" id="hdr-period"></div>
+<div class="hdr">
+  <div><div class="hdr-title">Cubico Nomina</div><div class="hdr-sub">Cubiertas de Colombia</div></div>
+  <div style="font-size:11px;opacity:.7;text-align:right" id="hdr-r"></div>
 </div>
-
-<div class="tab-bar">
-  <div class="tab active" onclick="switchTab('registro')">Registro</div>
-  <div class="tab" onclick="switchTab('acumulado')">Acumulado</div>
+<div class="tabs">
+  <div class="tab on" onclick="switchTab(0)">Registro</div>
+  <div class="tab" onclick="switchTab(1)">Acumulado</div>
 </div>
-
-<div class="content" id="tab-registro">
-  <div class="period-row">
-    <button class="period-btn active" onclick="setPeriod(1)" id="btn-p1">1 – 15</button>
-    <button class="period-btn" onclick="setPeriod(2)" id="btn-p2">16 – 31</button>
-  </div>
-  <div class="day-scroll" id="day-scroll"></div>
-  <div id="day-title" class="day-title"></div>
-  <div id="day-alert"></div>
-  <div id="emp-list"></div>
+<div class="area" id="t0">
+  <div class="hscroll" id="ps"></div>
+  <div class="hscroll" id="ds"></div>
+  <div id="dtitle" class="day-title"></div>
+  <div id="dalert"></div>
+  <div id="elist"></div>
 </div>
-
-<div class="content" id="tab-acumulado" style="display:none">
-  <div class="period-row">
-    <button class="period-btn active" onclick="setPeriodAcum(1)" id="btn-ap1">1 – 15</button>
-    <button class="period-btn" onclick="setPeriodAcum(2)" id="btn-ap2">16 – 31</button>
-  </div>
-  <div class="stats-grid" id="stats-grid"></div>
-  <div class="section-hdr">Detalle por empleado</div>
-  <div id="emp-acum-list"></div>
+<div class="area" id="t1" style="display:none">
+  <div class="hscroll" id="pas"></div>
+  <div class="sgrid" id="sgrid"></div>
+  <div class="shdr">Por empleado</div>
+  <div id="alist"></div>
 </div>
-
-<div class="btn-row" id="btn-row-registro">
-  <button class="btn-save" onclick="saveDay()">Guardar</button>
-  <button class="btn-send" onclick="sendToClaudeAI()">Enviar a Claude ↗</button>
+<div class="btnrow" id="brow">
+  <button class="btn btn-s" onclick="saveDay()">Guardar</button>
+  <button class="btn btn-c" onclick="sendClaude()">Enviar a Claude</button>
 </div>
-
-<div class="saved-toast" id="toast">Guardado</div>
-
+<div class="toast" id="toast">Guardado</div>
 <script>
-const EMPLEADOS=[
-  {id:"98478547",   ap:"HERNANDEZ ZAPATA",  nom:"ALBERTO DE JESUS", cargo:"Pintor",                    sal:1750905,aux:true, obs:""},
-  {id:"1010107624", ap:"VILLA CORREAL",      nom:"ANDERSON DAVID",   cargo:"Ayudante Cubiertas",        sal:1750905,aux:true, obs:""},
-  {id:"1120925887", ap:"SARMIENTO NATERA",   nom:"ARNALDO ANDRES",   cargo:"Oficial Cubiertas",         sal:2000000,aux:true, obs:""},
-  {id:"1214744447", ap:"OCHOA ORTIZ",        nom:"CRISTIAN ANDRES",  cargo:"Ingeniero Planta/Montaje",  sal:3502000,aux:false,obs:""},
-  {id:"71793031",   ap:"TOBON JARAMILLO",    nom:"EDISSON ALBERTO",  cargo:"Ayudante Soldador",         sal:1750905,aux:true, obs:""},
-  {id:"8363884",    ap:"CORREA GOMEZ",       nom:"EDWIN DAVID",      cargo:"Soldador/Pintor/Montador",  sal:2200000,aux:true, obs:""},
-  {id:"1015070341", ap:"ARANGO ARROYAVE",    nom:"ESTEBAN",          cargo:"Ayudante",                  sal:1750905,aux:true, obs:""},
-  {id:"71269852",   ap:"HERNANDEZ ARIAS",    nom:"FABIAN ADOLFO",    cargo:"Pintor",                    sal:1750905,aux:true, obs:""},
-  {id:"1214732042", ap:"ARROYAVE CHAVARRIA", nom:"GUSTAVO ALONSO",   cargo:"Soldador/Pintor/Montador",  sal:2020000,aux:true, obs:""},
-  {id:"15371723",   ap:"DUQUE MONTOYA",      nom:"HECTOR FABIO",     cargo:"SISO",                      sal:1750905,aux:false,obs:"incapacitado"},
-  {id:"1039470885", ap:"GARCIA CORTES",      nom:"JEFFERSON",        cargo:"Ayudante",                  sal:1750905,aux:true, obs:""},
-  {id:"1128454208", ap:"CORTES OCAMPO",      nom:"JOAN DANIEL",      cargo:"Soldador",                  sal:1750905,aux:false,obs:"encasa"},
-  {id:"13068799",   ap:"CACERES MEDINA",     nom:"JOSE EDUARDO",     cargo:"Gerente",                   sal:5000000,aux:false,obs:""},
-  {id:"71682368",   ap:"GIRALDO VASCO",      nom:"JOSE IVAN",        cargo:"Soldador en Piso",          sal:1750905,aux:true, obs:""},
-  {id:"1152699870", ap:"DAVID USUGA",        nom:"JUAN CARLOS",      cargo:"SISO",                      sal:2100000,aux:true, obs:""},
-  {id:"71382929",   ap:"GARCIA CARDONA",     nom:"JUAN PABLO",       cargo:"Oficial Cubiertas",         sal:1750905,aux:true, obs:""},
-  {id:"43803458",   ap:"HERNANDEZ PEREZ",    nom:"NORELIS SOFIA",    cargo:"Empleada Doméstica",        sal:1750905,aux:true, obs:""},
-  {id:"98396958",   ap:"ORTEGA RIASCOS",     nom:"RAMON ERNESTO",    cargo:"Soldador/Pintor/Montador",  sal:2200000,aux:true, obs:""},
-  {id:"1124858315", ap:"GUETIO YANDE",       nom:"YUDI ESTELLA",     cargo:"SISO",                      sal:2135250,aux:true, obs:""},
+const EMP=[
+  {id:"98478547",  ap:"HERNANDEZ",  nm:"ALBERTO",    c:"Pintor",                  s:1750905,a:1,o:""},
+  {id:"1010107624",ap:"VILLA",      nm:"ANDERSON",   c:"Ayudante Cubiertas",      s:1750905,a:1,o:""},
+  {id:"1120925887",ap:"SARMIENTO",  nm:"ARNALDO",    c:"Oficial Cubiertas",       s:2000000,a:1,o:""},
+  {id:"1214744447",ap:"OCHOA",      nm:"CRISTIAN",   c:"Ingeniero Planta",        s:3502000,a:0,o:""},
+  {id:"71793031",  ap:"TOBON",      nm:"EDISSON",    c:"Ayudante Soldador",       s:1750905,a:1,o:""},
+  {id:"8363884",   ap:"CORREA",     nm:"EDWIN",      c:"Soldador/Pintor/Montador",s:2200000,a:1,o:""},
+  {id:"1015070341",ap:"ARANGO",     nm:"ESTEBAN",    c:"Ayudante",                s:1750905,a:1,o:""},
+  {id:"71269852",  ap:"HERNANDEZ",  nm:"FABIAN",     c:"Pintor",                  s:1750905,a:1,o:""},
+  {id:"1214732042",ap:"ARROYAVE",   nm:"GUSTAVO",    c:"Soldador/Pintor/Montador",s:2020000,a:1,o:""},
+  {id:"15371723",  ap:"DUQUE",      nm:"HECTOR",     c:"SISO",                    s:1750905,a:0,o:"inc"},
+  {id:"1039470885",ap:"GARCIA",     nm:"JEFFERSON",  c:"Ayudante",                s:1750905,a:1,o:""},
+  {id:"1128454208",ap:"CORTES",     nm:"JOAN DANIEL",c:"Soldador",                s:1750905,a:0,o:"casa"},
+  {id:"13068799",  ap:"CACERES",    nm:"JOSE EDUARDO",c:"Gerente",                s:5000000,a:0,o:""},
+  {id:"71682368",  ap:"GIRALDO",    nm:"JOSE IVAN",  c:"Soldador en Piso",        s:1750905,a:1,o:""},
+  {id:"1152699870",ap:"DAVID",      nm:"JUAN CARLOS",c:"SISO",                    s:2100000,a:1,o:""},
+  {id:"71382929",  ap:"GARCIA",     nm:"JUAN PABLO", c:"Oficial Cubiertas",       s:1750905,a:1,o:""},
+  {id:"43803458",  ap:"HERNANDEZ",  nm:"NORELIS",    c:"Empleada Domestica",      s:1750905,a:1,o:""},
+  {id:"98396958",  ap:"ORTEGA",     nm:"RAMON",      c:"Soldador/Pintor/Montador",s:2200000,a:1,o:""},
+  {id:"1124858315",ap:"GUETIO",     nm:"YUDI",       c:"SISO",                    s:2135250,a:1,o:""},
 ];
-
-const FESTIVOS=["2026-01-01","2026-01-12","2026-03-23","2026-04-02","2026-04-03","2026-04-30","2026-05-01","2026-05-18","2026-06-08","2026-06-29","2026-07-20","2026-08-07","2026-08-17","2026-10-12","2026-11-02","2026-11-16","2026-12-08","2026-12-25"];
-const DIAS=["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
+const FEST={"2026-01-01":1,"2026-01-12":1,"2026-03-23":1,"2026-04-02":1,"2026-04-03":1,"2026-04-30":1,"2026-05-01":1,"2026-05-18":1,"2026-06-08":1,"2026-06-29":1,"2026-07-20":1,"2026-08-07":1,"2026-08-17":1,"2026-10-12":1,"2026-11-02":1,"2026-11-16":1,"2026-12-08":1,"2026-12-25":1};
+const DS=["Dom","Lun","Mar","Mie","Jue","Vie","Sab"];
+const MS=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const ML=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DIV=220;
+let pk=null,apk=null,cd=null,dat={};
 
-let period=2, acumPeriod=2, currentDay=null;
-let data={};
+function iso(y,m,d){return y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0")}
+function isF(s){return!!FEST[s]}
+function isD(s){return new Date(s+"T12:00").getDay()===0}
+function isS(s){return new Date(s+"T12:00").getDay()===6}
 
-function toISO(y,m,d){return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`}
-function isFest(iso){return FESTIVOS.includes(iso)}
-function isDom(iso){return new Date(iso+'T12:00').getDay()===0}
-function isSab(iso){return new Date(iso+'T12:00').getDay()===6}
-
-function getDays(p,month=3){
-  const [s,e]=p===1?[1,15]:[16,31];
-  const days=[];
-  for(let d=s;d<=e;d++){
-    const iso=toISO(2026,month,d);
-    const dt=new Date(iso+'T12:00');
-    if(dt.getMonth()!==month-1) continue;
-    if(isDom(iso)) continue;
-    days.push({iso,d,dow:dt.getDay(),fest:isFest(iso),sab:isSab(iso)});
-  }
-  return days;
+function allPeriods(){
+  let r=[];
+  for(let m=1;m<=12;m++) for(let p=1;p<=2;p++) r.push({k:`2026-${m}-${p}`,m,p,lbl:`${MS[m-1]} ${p===1?"1-15":"16-fin"}`});
+  return r;
 }
 
-function parseH(s){
+function getDays(m,p){
+  let r=[],s=p===1?1:16,e=p===1?16:32;
+  for(let d=s;d<e;d++){
+    let s2=iso(2026,m,d),dt=new Date(s2+"T12:00");
+    if(dt.getMonth()!==m-1) break;
+    if(isD(s2)) continue;
+    r.push({s:s2,d,f:isF(s2)});
+  }
+  return r;
+}
+
+function pH(s){
   if(!s||!s.trim()) return null;
-  s=s.replace(':','').trim();
+  s=s.replace(":","").trim();
   if(s.length<3||s.length>4) return null;
-  const h=parseInt(s.length===4?s.slice(0,2):s[0]);
-  const m=parseInt(s.slice(-2));
+  let h=parseInt(s.length===4?s.slice(0,2):s[0]),m=parseInt(s.slice(-2));
   if(isNaN(h)||isNaN(m)||h>23||m>59) return null;
   return h+m/60;
 }
 
-function calcTurnos(turnos,isDomFest){
-  let ord=0,hed=0,hen=0,hdom=0;
-  const BASE=7+50/60;
-  turnos.forEach(t=>{
-    let ini=parseH(t.ini),fin=parseH(t.fin);
-    if(ini===null||fin===null) return;
-    if(fin<=ini) fin+=24;
-    const dur=fin-ini;
-    if(dur<=0) return;
-    let noc=0;
-    [[21,Math.min(fin,30)],[0,Math.min(fin,6)]].forEach(([ns,ne])=>{
-      const s=Math.max(ini,ns),e=ne;
-      if(e>s) noc+=e-s;
-    });
-    const diur=dur-noc;
-    if(isDomFest){hdom+=diur;hen+=noc;}
-    else{ord+=diur;hen+=noc;}
+function calc(t,df,sab){
+  let ord=0,hed=0,hen=0,hd=0;
+  const B=sab?(4+50/60):(7+50/60);
+  const DES_E=7+35/60, ALM_E=13;
+  let desDone=false, almDone=false;
+  t.forEach(x=>{
+    let i=pH(x.i),f=pH(x.f);
+    if(i===null||f===null) return;
+    if(f<=i) f+=24;
+    let d=f-i; if(d<=0) return;
+    if(!desDone&&i<DES_E&&f>(7+10/60)){d-=25/60;desDone=true;}
+    if(!sab&&!almDone&&i<ALM_E&&f>12){d-=1;almDone=true;}
+    if(d<=0) return;
+    let n=0;
+    if(f>21){let s2=Math.max(i,21),e2=Math.min(f,30);if(e2>s2)n+=e2-s2;}
+    if(i<6){let s2=Math.max(i,0),e2=Math.min(f,6);if(e2>s2)n+=e2-s2;}
+    let di=d-n;
+    if(df){hd+=di;hen+=n;}else{ord+=di;hen+=n;}
   });
-  if(!isDomFest&&ord>BASE){hed=ord-BASE;ord=BASE;}
-  return{ord,hed,hen,hdom};
+  if(!df&&ord>B){hed=ord-B;ord=B;}
+  return{ord,hed,hen,hd};
 }
 
-function vhe(emp,hed,hen,hdom){
-  const v=emp.sal/DIV;
-  return Math.round(hed*v*1.25+hen*v*1.75+hdom*v*2);
+function vhe(e,hed,hen,hd){
+  let v=e.s/DIV;
+  return Math.round(hed*v*1.25+hen*v*1.75+hd*v*2);
 }
 
-function getKey(iso,empId){return `${iso}_${empId}`}
-function initKey(iso,empId){
-  const k=getKey(iso,empId);
-  if(!data[k]) data[k]={t:[{i:'',f:''},{i:'',f:''},{i:'',f:''}],nov:'normal'};
-  return k;
+function gk(s,id){return s+"_"+id}
+function ik(s,id){let k=gk(s,id);if(!dat[k])dat[k]={t:[{i:"",f:""},{i:"",f:""},{i:"",f:""}],n:"normal"};return k;}
+function save(){try{localStorage.setItem("cub2",JSON.stringify(dat));}catch(e){}}
+function load(){try{let d=localStorage.getItem("cub2");if(d)dat=JSON.parse(d);}catch(e){}}
+
+function renderPS(id,active,fn){
+  let sc=document.getElementById(id);sc.innerHTML="";
+  allPeriods().forEach(({k,lbl})=>{
+    let el=document.createElement("div");
+    el.className="chip"+(k===active?" on":"");
+    el.textContent=lbl;el.onclick=()=>fn(k);sc.appendChild(el);
+  });
+  setTimeout(()=>{let a=sc.querySelector(".on");if(a)a.scrollIntoView({inline:"center",block:"nearest"});},80);
 }
 
-function saveToStorage(){localStorage.setItem('cubico_data',JSON.stringify(data));}
-function loadFromStorage(){try{const d=localStorage.getItem('cubico_data');if(d)data=JSON.parse(d);}catch(e){}}
-
-function setPeriod(p){
-  period=p;currentDay=null;
-  document.getElementById('btn-p1').className='period-btn'+(p===1?' active':'');
-  document.getElementById('btn-p2').className='period-btn'+(p===2?' active':'');
-  document.getElementById('hdr-period').textContent=p===1?'Mar 1–15':'Mar 16–31';
-  renderDayScroll();
-  document.getElementById('day-title').textContent='Selecciona un día';
-  document.getElementById('day-alert').innerHTML='';
-  document.getElementById('emp-list').innerHTML='';
+function setPeriod(k){
+  pk=k;cd=null;
+  let[y,m,p]=k.split("-").map(Number);
+  document.getElementById("hdr-r").textContent=MS[m-1]+" "+(p===1?"1-15":"16-fin");
+  renderPS("ps",k,setPeriod);
+  renderDS(m,p);
+  document.getElementById("dtitle").textContent="Selecciona un dia";
+  document.getElementById("dalert").innerHTML="";
+  document.getElementById("elist").innerHTML="";
 }
 
-function renderDayScroll(){
-  const days=getDays(period);
-  const sc=document.getElementById('day-scroll');
-  sc.innerHTML='';
+function renderDS(m,p){
+  let days=getDays(m,p),sc=document.getElementById("ds");sc.innerHTML="";
   days.forEach(day=>{
-    const dt=new Date(day.iso+'T12:00');
-    const lbl=`${DIAS[dt.getDay()]} ${day.d}${day.fest?' F':''}`;
-    const cls='day-chip'+(day.fest?' festivo':'')+(isDom(day.iso)?' domingo':'')+(currentDay===day.iso?' active':'');
-    const el=document.createElement('div');
-    el.className=cls; el.textContent=lbl;
-    el.onclick=()=>selectDay(day.iso,day.fest||isDom(day.iso),day.sab);
-    sc.appendChild(el);
+    let dt=new Date(day.s+"T12:00"),lbl=DS[dt.getDay()]+" "+day.d+(day.f?" F":"");
+    let el=document.createElement("div");
+    el.className="chip day"+(day.f?" fest":"")+(cd===day.s?" on":"");
+    el.textContent=lbl;el.onclick=()=>selDay(day.s,day.f);sc.appendChild(el);
   });
 }
 
-function selectDay(iso,isDomFest,isSabado){
-  currentDay=iso;
-  renderDayScroll();
-  const dt=new Date(iso+'T12:00');
-  const meses=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-  let lbl=`${DIAS[dt.getDay()]} ${dt.getDate()} ${meses[dt.getMonth()]} 2026`;
-  if(isFest(iso)) lbl+=' — FESTIVO';
-  document.getElementById('day-title').textContent=lbl;
-  const alertDiv=document.getElementById('day-alert');
-  alertDiv.innerHTML=isDomFest?'<div class="alert-box">Día dominical/festivo — aplica recargo o HE dominical</div>':'';
-  renderEmpList(iso,isDomFest);
+function selDay(s,isFestivo){
+  cd=s;
+  let[y,m,p]=pk.split("-").map(Number);
+  renderDS(m,p);
+  let dt=new Date(s+"T12:00"),df=isFestivo||isD(s);
+  document.getElementById("dtitle").textContent=DS[dt.getDay()]+" "+dt.getDate()+" "+MS[dt.getMonth()]+" 2026"+(isFestivo?" - FESTIVO":"");
+  document.getElementById("dalert").innerHTML=df?'<div class="alert">Festivo/dominical - aplica recargo o HE dominical</div>':''  ;
+  renderEL(s,df,isSabado);
 }
 
-function renderEmpList(iso,isDomFest){
-  const list=document.getElementById('emp-list');
-  list.innerHTML='';
-  EMPLEADOS.forEach(emp=>{
-    const k=initKey(iso,emp.id);
-    const d=data[k];
-    let cardCls='emp-card';
-    if(emp.obs==='incapacitado') cardCls+=' incap';
-    else if(emp.obs==='encasa') cardCls+=' encasa';
-    const card=document.createElement('div');
-    card.className=cardCls; card.id=`card_${emp.id}`;
-    card.innerHTML=`
-      <div class="emp-top">
-        <div>
-          <div class="emp-name">${emp.ap.split(' ')[0]} ${emp.nom.split(' ')[0]}</div>
-          <div class="emp-role">${emp.cargo}</div>
-        </div>
-        <select class="nov-select" onchange="updNov('${iso}','${emp.id}',this.value)">
-          <option value="normal" ${d.nov==='normal'?'selected':''}>Normal</option>
-          <option value="P"   ${d.nov==='P'?'selected':''}>P - Permiso</option>
-          <option value="NP"  ${d.nov==='NP'?'selected':''}>NP - Sin permiso</option>
-          <option value="INC" ${d.nov==='INC'?'selected':''}>INC - Incapacidad</option>
-          <option value="VAC" ${d.nov==='VAC'?'selected':''}>VAC - Vacaciones</option>
-          <option value="CAL" ${d.nov==='CAL'?'selected':''}>CAL - Calamidad</option>
-        </select>
-      </div>
-      <div class="turnos-grid">
-        ${[0,1,2].map(i=>`
-          <div class="turno-row">
-            <span class="turno-lbl">T${i+1}</span>
-            <input class="turno-input" type="tel" placeholder="0710" maxlength="4" value="${d.t[i].i}"
-              oninput="updT('${iso}','${emp.id}',${i},'i',this.value)">
-            <span class="turno-sep">–</span>
-            <input class="turno-input" type="tel" placeholder="1625" maxlength="4" value="${d.t[i].f}"
-              oninput="updT('${iso}','${emp.id}',${i},'f',this.value)">
-          </div>
-        `).join('')}
-      </div>
-      <div class="emp-result" id="res_${emp.id}"></div>
-    `;
+function renderEL(s,df,sb){
+  let list=document.getElementById("elist");list.innerHTML="";
+  EMP.forEach(e=>{
+    let k=ik(s,e.id),d=dat[k];
+    let cls="ecard"+(e.o==="inc"?" inc":e.o==="casa"?" casa":"");
+    let card=document.createElement("div");card.className=cls;
+    card.innerHTML='<div class="etop"><div style="flex:1;min-width:0"><div class="ename">'+e.ap+" "+e.nm+'</div><div class="erole">'+e.c+'</div></div><select class="nsel" onchange="uN(\'\'+s+'\',\'\'+e.id+'\',this.value)"><option value="normal"'+( d.n==="normal"?" selected":"")+'>Normal</option><option value="P"'+( d.n==="P"?" selected":"")+'>P-Permiso</option><option value="NP"'+( d.n==="NP"?" selected":"")+'>NP-Sin permiso</option><option value="INC"'+( d.n==="INC"?" selected":"")+'>INC-Incapacidad</option><option value="VAC"'+( d.n==="VAC"?" selected":"")+'>VAC-Vacaciones</option><option value="CAL"'+( d.n==="CAL"?" selected":"")+'>CAL-Calamidad</option></select></div><div class="tgrid">'
+      +[0,1,2].map(i=>'<div class="trow"><span class="tlbl">T'+(i+1)+'</span><input class="tinp" type="tel" inputmode="numeric" placeholder="0710" maxlength="4" value="'+d.t[i].i+'" oninput="uT(\'\'+s+'\',\'\'+e.id+'\','+i+',\'i\',this.value)"><span class="tsep">-</span><input class="tinp" type="tel" inputmode="numeric" placeholder="1625" maxlength="4" value="'+d.t[i].f+'" oninput="uT(\'\'+s+'\',\'\'+e.id+'\','+i+',\'f\',this.value)"></div>').join("")
+      +'</div><div class="eres" id="r_'+e.id+'"></div>';
     list.appendChild(card);
-    updateResult(iso,emp,isDomFest);
+    updR(s,e,df,sb);
   });
 }
 
-function updNov(iso,empId,val){const k=initKey(iso,empId);data[k].nov=val;}
-function updT(iso,empId,idx,field,val){
-  const k=initKey(iso,empId);
-  data[k].t[idx][field]=val;
-  const emp=EMPLEADOS.find(e=>e.id===empId);
-  const isDomFest=isFest(iso)||isDom(iso);
-  updateResult(iso,emp,isDomFest);
+function uN(s,id,v){let k=ik(s,id);dat[k].n=v;}
+function uT(s,id,i,f,v){
+  let k=ik(s,id);dat[k].t[i][f]=v;
+  let e=EMP.find(x=>x.id===id),df=isF(s)||isD(s);
+  updR(s,e,df,sb);
 }
 
-function updateResult(iso,emp,isDomFest){
-  const k=getKey(iso,emp.id);
-  const d=data[k]; if(!d) return;
-  const el=document.getElementById(`res_${emp.id}`); if(!el) return;
-  const hasTurnos=d.t.some(t=>t.i&&t.f);
-  if(!hasTurnos){el.innerHTML='';return;}
-  const r=calcTurnos(d.t.map(t=>({ini:t.i,fin:t.f})),isDomFest);
-  const v=vhe(emp,r.hed,r.hen,r.hdom);
-  el.innerHTML=`
-    ${r.ord>0?`<span class="res-badge res-ord">Ord ${r.ord.toFixed(1)}h</span>`:''}
-    ${r.hed>0?`<span class="res-badge res-hed">HE diurna ${r.hed.toFixed(2)}h</span>`:''}
-    ${r.hen>0?`<span class="res-badge res-hen">Noct ${r.hen.toFixed(2)}h</span>`:''}
-    ${r.hdom>0?`<span class="res-badge res-dom">Dom ${r.hdom.toFixed(2)}h</span>`:''}
-    ${v>0?`<span class="res-badge res-val">$${v.toLocaleString('es-CO')}</span>`:''}
-  `;
+function updR(s,e,df,sb){
+  let k=gk(s,e.id),d=dat[k];if(!d)return;
+  let el=document.getElementById("r_"+e.id);if(!el)return;
+  let has=d.t.some(t=>t.i&&t.f);if(!has){el.innerHTML="";return;}
+  let r=calc(d.t,df,sb),v=vhe(e,r.hed,r.hen,r.hd);
+  el.innerHTML=(r.ord>0?'<span class="badge b-ord">Ord '+r.ord.toFixed(1)+'h</span>':""  )
+    +(r.hed>0?'<span class="badge b-hed">HE '+r.hed.toFixed(2)+'h</span>':""  )
+    +(r.hen>0?'<span class="badge b-hen">Noct '+r.hen.toFixed(2)+'h</span>':""  )
+    +(r.hd>0?'<span class="badge b-dom">Dom '+r.hd.toFixed(2)+'h</span>':""  )
+    +(v>0?'<span class="badge b-val">$'+v.toLocaleString("es-CO")+'</span>':""  );
 }
 
 function saveDay(){
-  saveToStorage();
-  const toast=document.getElementById('toast');
-  toast.className='saved-toast show';
-  setTimeout(()=>toast.className='saved-toast',2000);
+  save();
+  let t=document.getElementById("toast");t.className="toast on";
+  setTimeout(()=>t.className="toast",2000);
 }
 
-function setPeriodAcum(p){
-  acumPeriod=p;
-  document.getElementById('btn-ap1').className='period-btn'+(p===1?' active':'');
-  document.getElementById('btn-ap2').className='period-btn'+(p===2?' active':'');
-  renderAcumulado();
+function setAcum(k){
+  apk=k;renderPS("pas",k,setAcum);renderAcum();
 }
 
-function renderAcumulado(){
-  const days=getDays(acumPeriod);
-  let totOrd=0,totHED=0,totHEN=0,totDOM=0,totVal=0;
-  const rows=EMPLEADOS.map(emp=>{
-    let ord=0,hed=0,hen=0,hdom=0,novs=[];
+function renderAcum(){
+  if(!apk)return;
+  let[y,m,p]=apk.split("-").map(Number),days=getDays(m,p);
+  let tO=0,tH=0,tN=0,tD=0,tV=0;
+  let rows=EMP.map(e=>{
+    let ord=0,hed=0,hen=0,hd=0,ns=[];
     days.forEach(day=>{
-      const k=getKey(day.iso,emp.id);
-      const d=data[k]; if(!d) return;
-      const isDomFest=isFest(day.iso)||isDom(day.iso);
-      const r=calcTurnos(d.t.map(t=>({ini:t.i,fin:t.f})),isDomFest);
-      ord+=r.ord;hed+=r.hed;hen+=r.hen;hdom+=r.hdom;
-      if(d.nov&&d.nov!=='normal') novs.push(d.nov);
+      let k=gk(day.s,e.id),d=dat[k];if(!d)return;
+      let r=calc(d.t,isF(day.s)||isD(day.s),isS(day.s));
+      ord+=r.ord;hed+=r.hed;hen+=r.hen;hd+=r.hd;
+      if(d.n&&d.n!=="normal")ns.push(d.n);
     });
-    const val=vhe(emp,hed,hen,hdom);
-    totOrd+=ord;totHED+=hed;totHEN+=hen;totDOM+=hdom;totVal+=val;
-    return{emp,ord,hed,hen,hdom,val,novs};
+    let v=vhe(e,hed,hen,hd);
+    tO+=ord;tH+=hed;tN+=hen;tD+=hd;tV+=v;
+    return{e,ord,hed,hen,hd,v,ns};
   });
-
-  document.getElementById('stats-grid').innerHTML=`
-    <div class="stat-card"><div class="stat-label">Hrs ordinarias</div><div class="stat-val">${totOrd.toFixed(1)}</div><div class="stat-sub">Total equipo</div></div>
-    <div class="stat-card"><div class="stat-label">HE diurnas</div><div class="stat-val">${totHED.toFixed(1)}</div><div class="stat-sub">Equipo</div></div>
-    <div class="stat-card"><div class="stat-label">HE nocturnas</div><div class="stat-val">${totHEN.toFixed(1)}</div><div class="stat-sub">Equipo</div></div>
-    <div class="stat-card"><div class="stat-label">Valor total HE</div><div class="stat-val" style="font-size:16px">$${totVal.toLocaleString('es-CO')}</div><div class="stat-sub">A liquidar</div></div>
-  `;
-
-  const list=document.getElementById('emp-acum-list');
-  list.innerHTML='';
-  rows.forEach(({emp,ord,hed,hen,hdom,val,novs})=>{
-    const div=document.createElement('div');
-    div.className='emp-acum-card';
-    const novHtml=emp.obs==='incapacitado'?'<span class="res-badge res-hen">INC</span>':
-                  emp.obs==='encasa'?'<span class="res-badge" style="background:var(--yellow);color:#92400e">En casa</span>':
-                  novs.length?novs.map(n=>`<span class="res-badge res-hed">${n}</span>`).join(''):'';
-    div.innerHTML=`
-      <div class="emp-acum-top">
-        <div>
-          <div class="emp-acum-name">${emp.ap.split(' ')[0]} ${emp.nom.split(' ')[0]}</div>
-          <div class="emp-acum-role">${emp.cargo}</div>
-        </div>
-        <div class="emp-acum-val">${val>0?'$'+val.toLocaleString('es-CO'):'—'}</div>
-      </div>
-      <div class="emp-acum-badges">
-        ${ord>0?`<span class="res-badge res-ord">Ord ${ord.toFixed(1)}h</span>`:''}
-        ${hed>0?`<span class="res-badge res-hed">HE ${hed.toFixed(2)}h</span>`:''}
-        ${hen>0?`<span class="res-badge res-hen">Noct ${hen.toFixed(2)}h</span>`:''}
-        ${hdom>0?`<span class="res-badge res-dom">Dom ${hdom.toFixed(2)}h</span>`:''}
-        ${novHtml}
-      </div>
-    `;
+  document.getElementById("sgrid").innerHTML=
+    '<div class="sc"><div class="sc-lbl">Hrs ordinarias</div><div class="sc-val">'+tO.toFixed(1)+'</div></div>'
+    +'<div class="sc"><div class="sc-lbl">HE diurnas</div><div class="sc-val">'+tH.toFixed(1)+'</div></div>'
+    +'<div class="sc"><div class="sc-lbl">HE nocturnas</div><div class="sc-val">'+tN.toFixed(1)+'</div></div>'
+    +'<div class="sc"><div class="sc-lbl">Valor HE</div><div class="sc-val" style="font-size:15px">$'+tV.toLocaleString("es-CO")+'</div></div>';
+  let list=document.getElementById("alist");list.innerHTML="";
+  rows.forEach(({e,ord,hed,hen,hd,v,ns})=>{
+    let div=document.createElement("div");div.className="acard";
+    let nb=e.o==="inc"?'<span class="badge b-hen">INC</span>':e.o==="casa"?'<span class="badge b-nov">En casa</span>':ns.length?[...new Set(ns)].map(n=>'<span class="badge b-nov">'+n+'</span>').join(""):"";
+    div.innerHTML='<div class="atop"><div style="flex:1;min-width:0"><div class="aname">'+e.ap+" "+e.nm+'</div><div class="arole">'+e.c+'</div></div><div class="aval">'+( v>0?"$"+v.toLocaleString("es-CO"):"—")+'</div></div><div class="abadges">'
+      +(ord>0?'<span class="badge b-ord">Ord '+ord.toFixed(1)+'h</span>':""  )
+      +(hed>0?'<span class="badge b-hed">HE '+hed.toFixed(2)+'h</span>':""  )
+      +(hen>0?'<span class="badge b-hen">Noct '+hen.toFixed(2)+'h</span>':""  )
+      +(hd>0?'<span class="badge b-dom">Dom '+hd.toFixed(2)+'h</span>':""  )
+      +nb+'</div>';
     list.appendChild(div);
   });
 }
 
-function switchTab(t){
-  document.getElementById('tab-registro').style.display=t==='registro'?'block':'none';
-  document.getElementById('tab-acumulado').style.display=t==='acumulado'?'block':'none';
-  document.getElementById('btn-row-registro').style.display=t==='registro'?'flex':'none';
-  document.querySelectorAll('.tab').forEach((el,i)=>{
-    el.className='tab'+((i===0&&t==='registro')||(i===1&&t==='acumulado')?' active':'');
-  });
-  if(t==='acumulado') renderAcumulado();
+function switchTab(i){
+  document.getElementById("t0").style.display=i===0?"block":"none";
+  document.getElementById("t1").style.display=i===1?"block":"none";
+  document.getElementById("brow").style.display=i===0?"flex":"none";
+  document.querySelectorAll(".tab").forEach((el,j)=>el.className="tab"+(j===i?" on":""));
+  if(i===1){if(!apk)apk=pk;renderPS("pas",apk,setAcum);renderAcum();}
 }
 
-function sendToClaudeAI(){
-  saveToStorage();
-  const days=getDays(period);
-  const meses=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
-  let lines=[`Reporte nómina quincena ${period===1?'1-15':'16-31'} Marzo 2026:\n`];
+function sendClaude(){
+  save();
+  if(!pk){alert("Selecciona una quincena");return;}
+  let[y,m,p]=pk.split("-").map(Number),days=getDays(m,p);
+  let lines=[`Reporte nomina ${ML[m-1]} ${p===1?"1-15":"16-fin"} 2026:\n`];
   days.forEach(day=>{
-    const dt=new Date(day.iso+'T12:00');
-    const dayLines=[];
-    EMPLEADOS.forEach(emp=>{
-      const k=getKey(day.iso,emp.id);
-      const d=data[k]; if(!d) return;
-      const hasTurnos=d.t.some(t=>t.i&&t.f);
-      const hasNov=d.nov&&d.nov!=='normal';
-      if(!hasTurnos&&!hasNov) return;
-      const isDomFest=isFest(day.iso)||isDom(day.iso);
-      const r=calcTurnos(d.t.map(t=>({ini:t.i,fin:t.f})),isDomFest);
-      const turStr=d.t.filter(t=>t.i&&t.f).map(t=>`${t.i}-${t.f}`).join(' / ');
-      let line=`  ${emp.ap} ${emp.nom}: ${turStr||'sin horario'}`;
-      if(r.hed>0) line+=` | HE diurna ${r.hed.toFixed(2)}h`;
-      if(r.hen>0) line+=` | HE noct ${r.hen.toFixed(2)}h`;
-      if(r.hdom>0) line+=` | HE dom ${r.hdom.toFixed(2)}h`;
-      if(hasNov) line+=` [${d.nov}]`;
-      dayLines.push(line);
+    let dt=new Date(day.s+"T12:00"),dl=[];
+    EMP.forEach(e=>{
+      let k=gk(day.s,e.id),d=dat[k];if(!d)return;
+      let has=d.t.some(t=>t.i&&t.f),hn=d.n&&d.n!=="normal";
+      if(!has&&!hn&&!e.o)return;
+      let r=calc(d.t,isF(day.s)||isD(day.s),isS(day.s));
+      let ts=d.t.filter(t=>t.i&&t.f).map(t=>t.i+"-"+t.f).join(" / ");
+      let line="  "+e.ap+" "+e.nm+": "+(ts||"—");
+      if(r.hed>0)line+=" | HE "+r.hed.toFixed(2)+"h";
+      if(r.hen>0)line+=" | Noct "+r.hen.toFixed(2)+"h";
+      if(r.hd>0)line+=" | Dom "+r.hd.toFixed(2)+"h";
+      if(hn)line+=" ["+d.n+"]";
+      if(e.o)line+=" ["+e.o+"]";
+      dl.push(line);
     });
-    if(dayLines.length){
-      lines.push(`${DIAS[new Date(day.iso+'T12:00').getDay()]} ${dt.getDate()} ${meses[dt.getMonth()]}:`);
-      lines.push(...dayLines,'');
-    }
+    if(dl.length){lines.push(DS[new Date(day.s+"T12:00").getDay()]+" "+dt.getDate()+" "+MS[dt.getMonth()]+":");lines.push(...dl,"");}
   });
-  const msg=lines.join('\n');
-  const url=`https://claude.ai/new?q=${encodeURIComponent(msg)}`;
-  window.open(url,'_blank');
+  window.open("https://claude.ai/new?q="+encodeURIComponent(lines.join("\n")),"_blank");
 }
 
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
-
-loadFromStorage();
-setPeriod(2);
-document.getElementById('hdr-period').textContent='Mar 16–31';
+if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+load();
+let td=new Date(),cm=td.getMonth()+1,cp=td.getDate()<=15?1:2,dk=`2026-${cm}-${cp}`;
+renderPS("ps",dk,setPeriod);pk=dk;setPeriod(dk);
 </script>
 </body>
 </html>
-EOF
-echo "index.html OK"
